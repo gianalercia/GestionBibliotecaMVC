@@ -14,11 +14,12 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * LibroDAO - Data Access Object
+ * LibroDAO - Data Access Object - separa la logica de negocio de la logica de acceso a datos
  */
 public class LibroDAO {
-    // Base de datos simulada con mapa en memoria
+    // Base de datos simulada con HashMap en memoria (al ser en memoria, es volatil)
     private static Map<Long, Libro> baseDatos = new HashMap<>();
+    // Atributo ID para simular un ID autoincremental en nuestra base
     private static Long nextId = 1L;
     
     // Bloque estático para inicializar datos de prueba
@@ -32,7 +33,7 @@ public class LibroDAO {
     }
     
     /**
-     * Buscar libro por ID
+     * Metodo de buscar libro por ID
      */
     public Optional<Libro> findById(Long id) {
         if (id == null) {
@@ -42,7 +43,7 @@ public class LibroDAO {
     }
     
     /**
-     * Guardar libro (crear o actualizar)
+     * metodo de guardar libro (crear o actualizar)
      */
     public Libro save(Libro libro) {
         if (libro.getId() == null) {
@@ -55,7 +56,7 @@ public class LibroDAO {
     }
     
     /**
-     * Obtener todos los libros
+     * Metodo para obtener todos los libros
      */
     public Map<Long, Libro> findAll() {
         return new HashMap<>(baseDatos);

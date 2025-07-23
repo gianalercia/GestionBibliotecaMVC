@@ -6,7 +6,7 @@ package com.mycompany.sistemadegestiondelibrosbibliioteca.model.dao;
 
 /**
  *
- * @author gian_
+ * Lo que hace el DAO es separar la logica de negocio de la logica de acceso a datos.
  */
 import com.mycompany.sistemadegestiondelibrosbibliioteca.model.entity.Libro;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * LibroDAO - Data Access Object - separa la logica de negocio de la logica de acceso a datos
+ * LibroDAO - Data Access Object
  */
 public class LibroDAO {
     // Base de datos simulada con HashMap en memoria (al ser en memoria, es volatil)

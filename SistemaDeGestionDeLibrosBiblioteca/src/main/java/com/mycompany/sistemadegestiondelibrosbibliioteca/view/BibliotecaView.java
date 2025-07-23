@@ -1,13 +1,8 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Autor: Mauro Gomez
  */
 package com.mycompany.sistemadegestiondelibrosbibliioteca.view;
 
-/**
- *
- * @author gian_
- */
 import com.mycompany.sistemadegestiondelibrosbibliioteca.controller.LibroController;
 import com.mycompany.sistemadegestiondelibrosbibliioteca.model.dto.LibroDTO;
 import java.util.InputMismatchException;
@@ -15,17 +10,23 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * BibliotecaView - Capa de presentación MVC
- * Maneja interfaz de usuario y presentación de datos
+ * Clase BibliotecaView - Implementa la interfaz de usuario del sistema
+ * Sigue el patrón MVC (Modelo-Vista-Controlador)
  */
 public class BibliotecaView {
+    // Scanner para leer entrada del usuario
     private Scanner scanner;
 
+    /**
+     * Constructor - Inicializa el scanner para entrada de datos
+     */
     public BibliotecaView() {
         this.scanner = new Scanner(System.in);
     }
+
     /**
-     * Muestra un libro encontrado
+     * Muestra los detalles de un libro encontrado
+     * @param libro Objeto LibroDTO con la información a mostrar
      */
     public void mostrarLibroEncontrado(LibroDTO libro) {
         System.out.println("HTTP 200 OK");
@@ -34,10 +35,12 @@ public class BibliotecaView {
         System.out.println("Título: " + libro.getTitulo());
         System.out.println("Autor: " + libro.getAutor());
         System.out.println("Año: " + libro.getAnoPublicacion());
-        System.out.println();
+        System.out.println(); // Salto de línea para mejor formato
     }
+
     /**
-     * Muestra un libro creado
+     * Muestra los detalles de un libro recién creado
+     * @param libro Objeto LibroDTO con la información del nuevo libro
      */
     public void mostrarLibroCreado(LibroDTO libro) {
         System.out.println("HTTP 201 CREATED");
@@ -49,6 +52,10 @@ public class BibliotecaView {
         System.out.println();
     }
 
+    /**
+     * Muestra la lista completa de libros
+     * @param libros Lista de objetos LibroDTO a mostrar
+     */
     public void mostrarListaLibros(List<LibroDTO> libros) {
         System.out.println("HTTP 200 OK");
         System.out.println("Lista de todos los libros:");
@@ -58,6 +65,7 @@ public class BibliotecaView {
         if (libros.isEmpty()) {
             System.out.println("No hay libros en el sistema.");
         } else {
+            // Iteramos sobre cada libro y mostramos sus datos
             for (LibroDTO libro : libros) {
                 System.out.println("ID: " + libro.getId() +
                         " | Título: " + libro.getTitulo() +
@@ -69,7 +77,9 @@ public class BibliotecaView {
     }
 
     /**
-     * Muestra errores HTTP
+     * Muestra mensajes de error con formato HTTP
+     * @param codigoHttp Código de estado HTTP
+     * @param mensaje Mensaje de error descriptivo
      */
     public void mostrarError(int codigoHttp, String mensaje) {
         String nombreEstado = obtenerNombreEstado(codigoHttp);
@@ -79,16 +89,19 @@ public class BibliotecaView {
     }
 
     /**
-     * Ejecuta el sistema interactivo
+     * Método principal que ejecuta el sistema interactivo
+     * @param controller Controlador para manejar la lógica de negocio
      */
     public void ejecutarSistemaInteractivo(LibroController controller) {
         boolean continuar = true;
 
+        // Bucle principal del sistema
         while (continuar) {
             try {
                 mostrarMenu();
                 int opcion = leerOpcion();
 
+                // Switch para manejar las opciones del menú
                 switch (opcion) {
                     case 1:
                         ejecutarBusquedaLibro(controller);
@@ -108,6 +121,7 @@ public class BibliotecaView {
                         break;
                 }
 
+                // Pausa antes de continuar (excepto para salir)
                 if (continuar && opcion >= 1 && opcion <= 3) {
                     System.out.println("Presione Enter para continuar...");
                     scanner.nextLine();
@@ -115,46 +129,42 @@ public class BibliotecaView {
 
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());
-                scanner.nextLine();
+                scanner.nextLine(); // Limpiar buffer
             }
         }
-        scanner.close();
+        scanner.close(); // Cerrar scanner al finalizar
     }
 
     /**
-     * Buscar libro por ID - GET /libros/{id}
+     * Maneja la búsqueda de un libro por ID
+     * @param controller Controlador para realizar la búsqueda
      */
     private void ejecutarBusquedaLibro(LibroController controller) {
         System.out.println("=== Buscar libro por ID ===");
 
         try {
             System.out.print("Ingrese el ID del libro: ");
-            String input = scanner.nextLine().trim();
+            Long id = scanner.nextLong();
+            scanner.nextLine(); // Limpiar buffer
 
-            Long id = null;
-            if (!input.isEmpty()) {
-                try {
-                    id = Long.parseLong(input);
-                } catch (NumberFormatException e) {
-                    mostrarError(400, "ID inválido. Debe ser un número entero.");
-                    return;
-                }
-            }
-
-            // El Controller maneja Model y View
+            // Delegamos la búsqueda al controlador
             controller.obtenerLibro(id);
 
-        } catch (Exception e) {
-            mostrarError(500, "Error al procesar la búsqueda: " + e.getMessage());
+        } catch (InputMismatchException e) {
+            scanner.nextLine();
+            mostrarError(400, "ID inválido. Debe ser un número entero.");
         }
     }
+
     /**
-     * Agregar nuevo libro - POST /libros
+     * Maneja la adición de un nuevo libro al sistema
+     * @param controller Controlador para agregar el libro
      */
     private void ejecutarAgregarLibro(LibroController controller) {
         System.out.println("=== Agregar nuevo libro ===");
 
         try {
+            // Solicitar datos del libro
             System.out.print("Ingrese el título: ");
             String titulo = scanner.nextLine().trim();
 
@@ -164,17 +174,18 @@ public class BibliotecaView {
             System.out.print("Ingrese el año de publicación: ");
             String anoStr = scanner.nextLine().trim();
 
+            // Mostrar resumen de datos
             System.out.println("Datos a guardar:");
             System.out.println("Título: " + titulo);
             System.out.println("Autor: " + autor);
             System.out.println("Año: " + anoStr);
 
+            // Confirmación del usuario
             System.out.print("¿Confirma? (s/n): ");
             String confirmacion = scanner.nextLine().trim().toLowerCase();
 
             if (confirmacion.equals("s") || confirmacion.equals("si")) {
-                // El Controller maneja Model y View
-                // Pasamos el año como String para que Service valide
+                // Delegamos la creación al controlador
                 controller.agregarLibro(titulo, autor, anoStr);
             } else {
                 System.out.println("Operación cancelada.");
@@ -186,7 +197,7 @@ public class BibliotecaView {
     }
 
     /**
-     * Muestra el menú principal
+     * Muestra el menú principal de opciones
      */
     private void mostrarMenu() {
         System.out.println("\n=== Sistema de Gestión de Libros ===");
@@ -198,21 +209,24 @@ public class BibliotecaView {
     }
 
     /**
-     * Lee opción del usuario
+     * Lee y valida la opción seleccionada por el usuario
+     * @return Opción seleccionada o -1 si es inválida
      */
     private int leerOpcion() {
         try {
             int opcion = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Limpiar buffer
             return opcion;
         } catch (InputMismatchException e) {
-            scanner.nextLine();
-            return -1;
+            scanner.nextLine(); // Limpiar buffer
+            return -1; // Retornar valor inválido
         }
     }
 
     /**
-     * Obtiene nombre del estado HTTP
+     * Convierte códigos HTTP a sus nombres descriptivos
+     * @param codigo Código de estado HTTP
+     * @return Nombre descriptivo del estado
      */
     private String obtenerNombreEstado(int codigo) {
         switch (codigo) {
@@ -225,10 +239,13 @@ public class BibliotecaView {
         }
     }
 
+    /**
+     * Maneja la solicitud para listar todos los libros
+     * @param controller Controlador para obtener la lista
+     */
     private void ejecutarListarLibros(LibroController controller) {
         System.out.println("=== Listar todos los libros ===");
-
-        // El Controller maneja Model y View
+        // Delegamos la operación al controlador
         controller.listarTodosLosLibros();
     }
 }

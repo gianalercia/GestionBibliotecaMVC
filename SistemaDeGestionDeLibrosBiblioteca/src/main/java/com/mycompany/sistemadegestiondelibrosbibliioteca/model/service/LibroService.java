@@ -23,6 +23,17 @@ import java.util.Optional;
  * Convierte entre Entity y DTO
  * Maneja todas las excepciones de negocio
  */
+// contiene:
+// -metodo de obtener un solo libro, con las validaciones de los ids
+// -metodo de obtener todos los libros, que este no lo pedia la consigna pero lo
+// agregamos para hacer la demostracion por consola; crea un arraylist y lo
+// itera con la informacion que le llega de la persistencia, en este caso
+// memoria
+// -metodo de agregar libro, mas pesado en cuanto a validaciones, las delega a
+// metodos privados y llama al metodo de convertir a dto, para formatear la
+// informacion
+// por simplicidad dejamos solo esta implementacion, no se uso una interfaz
+
 public class LibroService {
     private LibroDAO libroDAO;
 
@@ -43,7 +54,7 @@ public class LibroService {
         // Buscar en la base de datos
         Optional<Libro> libroOpt = libroDAO.findById(id);
 
-        //  Libro debe existir (Error 404)
+        // Libro debe existir (Error 404)
         if (libroOpt.isEmpty()) {
             throw new RuntimeException("Libro no encontrado con ID: " + id + " (Error 404)");
         }
@@ -100,7 +111,7 @@ public class LibroService {
             throw new IllegalArgumentException("El título no puede exceder 200 caracteres");
         }
     }
-    
+
     private void validarAutor(String autor) {
         if (autor == null || autor.trim().isEmpty()) {
             throw new IllegalArgumentException("El autor no puede estar vacío");
@@ -121,7 +132,8 @@ public class LibroService {
 
         // El autor solo debe contener letras, espacios y algunos caracteres especiales
         if (!autor.matches("^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s\\.\\-']+$")) {
-            throw new IllegalArgumentException("El autor solo puede contener letras, espacios, puntos, guiones y apostrofes");
+            throw new IllegalArgumentException(
+                    "El autor solo puede contener letras, espacios, puntos, guiones y apostrofes");
         }
     }
 
@@ -167,7 +179,7 @@ public class LibroService {
                 libro.getTitulo(),
                 libro.getAutor(),
                 libro.getAnoPublicacion()
-                // Nota: NO se incluye el campo 'disponible'
+        // Nota: NO se incluye el campo 'disponible'
         );
     }
 }

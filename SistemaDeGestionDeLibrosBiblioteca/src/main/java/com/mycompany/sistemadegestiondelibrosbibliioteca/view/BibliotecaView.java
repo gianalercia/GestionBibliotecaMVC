@@ -24,7 +24,6 @@ public class BibliotecaView {
     public BibliotecaView() {
         this.scanner = new Scanner(System.in);
     }
-
     /**
      * Muestra un libro encontrado
      */
@@ -37,7 +36,6 @@ public class BibliotecaView {
         System.out.println("Año: " + libro.getAnoPublicacion());
         System.out.println();
     }
-
     /**
      * Muestra un libro creado
      */
@@ -131,18 +129,25 @@ public class BibliotecaView {
 
         try {
             System.out.print("Ingrese el ID del libro: ");
-            Long id = scanner.nextLong();
-            scanner.nextLine();
+            String input = scanner.nextLine().trim();
+
+            Long id = null;
+            if (!input.isEmpty()) {
+                try {
+                    id = Long.parseLong(input);
+                } catch (NumberFormatException e) {
+                    mostrarError(400, "ID inválido. Debe ser un número entero.");
+                    return;
+                }
+            }
 
             // El Controller maneja Model y View
             controller.obtenerLibro(id);
 
-        } catch (InputMismatchException e) {
-            scanner.nextLine();
-            mostrarError(400, "ID inválido. Debe ser un número entero.");
+        } catch (Exception e) {
+            mostrarError(500, "Error al procesar la búsqueda: " + e.getMessage());
         }
     }
-
     /**
      * Agregar nuevo libro - POST /libros
      */

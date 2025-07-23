@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.sistemadegestiondelibrosbibliioteca.controller;
 
 import com.mycompany.sistemadegestiondelibrosbibliioteca.model.service.LibroService;
@@ -27,7 +23,8 @@ public class LibroController {
     }
 
     /**
-     * Endpoint: GET /libros/{id}
+     * METODO PARA OBTENER UN LIBRO (LO IMPRIME EN LA VISTA) 
+     * RECIBE POR PARAMETRO UN ID
      */
     public void obtenerLibro(Long id) {
         try {
@@ -52,7 +49,11 @@ public class LibroController {
             }
         }
     }
-
+    
+    
+    /**
+     * METODO PARA OBTENER TODOS LOS LIBROS (SE IMPRIMEN EN LA VISTA)
+     */
     public void listarTodosLosLibros() {
         try {
             // Coordina con el MODEL para obtener todos los libros
@@ -67,9 +68,8 @@ public class LibroController {
         }
     }
     /**
-     * Endpoint: POST /libros
-     * Maneja la petición de creación de nuevo libro
-     * Coordina Model y View sin contener lógica de negocio
+     * AGREGA UN NUEVO LIBRO
+     * RECIBE TRES PARAMETROS Y QUE LUEGO VALIDARA EN EL SERVICE
      */
     public void agregarLibro(String titulo, String autor, String anoPublicacionStr) {
         try {
@@ -89,4 +89,21 @@ public class LibroController {
             view.mostrarError(500, "Error interno del servidor: " + e.getMessage());
         }
     }
+    
+    /*
+     * En el caso de una api rest los metodos se verian del siguiente modo y retornarian un ResponseEntity:
+     * 
+     * 	@GetMapping("/{id}")
+    	public ResponseEntity<LibroDTO> getLibro(@PathVariable Long id) {
+        LibroDTO libroDTO = libroService.obtenerLibroPorId(id);
+        return ResponseEntity.ok(libroDTO);  // HTTP 200
+    }
+    
+    @PostMapping
+    public ResponseEntity<Void> postLibro(@RequestBody LibroDTO libroDTO) {
+		libroService.agregarLibro(libroDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();  // HTTP 201
+    }
+    
+     * **/
 }

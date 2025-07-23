@@ -10,7 +10,6 @@ package com.mycompany.sistemadegestiondelibrosbibliioteca.model.entity;
  */
 /**
  * Entity Libro - Representa la tabla de base de datos
- * Contiene todos los campos: id, titulo, autor, anoPublicacion, disponible
  */
 public class Libro {
     private Long id;
@@ -19,15 +18,9 @@ public class Libro {
     private Integer anoPublicacion;
     private Boolean disponible;
     
-    /**
-     * Constructor vacío
-     */
+
     public Libro() {
     }
-    
-    /**
-     * Constructor completo
-     */
     public Libro(Long id, String titulo, String autor, Integer anoPublicacion, Boolean disponible) {
         this.id = id;
         this.titulo = titulo;

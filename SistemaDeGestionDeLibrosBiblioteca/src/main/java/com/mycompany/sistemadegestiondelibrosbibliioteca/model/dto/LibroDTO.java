@@ -8,26 +8,16 @@ package com.mycompany.sistemadegestiondelibrosbibliioteca.model.dto;
  *
  * @author gian_
  */
-/**
- * LibroDTO - Data Transfer Object para transferencia externa
- * IMPORTANTE: No incluye el campo 'disponible' según requisitos
- * Solo expone: id, titulo, autor, anoPublicacion
- */
+
 public class LibroDTO {
     private Long id;
     private String titulo;
     private String autor;
     private Integer anoPublicacion;
-    // NOTA: El campo 'disponible' está OCULTO intencionalmente
-    
+    // El campo 'disponible' está OCULTO
+
     /**
-     * Constructor vacío
-     */
-    public LibroDTO() {
-    }
-    
-    /**
-     * Constructor completo
+     * Constructor
      */
     public LibroDTO(Long id, String titulo, String autor, Integer anoPublicacion) {
         this.id = id;
